@@ -1,0 +1,6 @@
+{
+  "name": "TV Launcher",
+  "description": "Schlanker Leanback-Launcher für Philips Android und Google TV mit Live-Wetter und App-Verwaltung",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

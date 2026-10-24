@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">TV Launcher</string>
+    <string name="favorites_title">Favoriten</string>
+    <string name="recents_title">Zuletzt genutzt</string>
+    <string name="all_apps_title">Alle Apps</string>
+    <string name="tools_title">System &amp; Werkzeuge</string>
+    <string name="settings_title">Einstellungen</string>
+    
+    <!-- Kontextmenü für Apps -->
+    <string name="context_menu_title">App-Optionen</string>
+    <string name="action_add_favorite">Zu Favoriten hinzufügen</string>
+    <string name="action_remove_favorite">Aus Favoriten entfernen</string>
+    <string name="action_app_info">App-Details (System)</string>
+    <string name="action_uninstall">App deinstallieren</string>
+    <string name="action_change_icon">Eigenes Icon wählen</string>
+    <string name="action_reset_icon">Standard-Icon wiederherstellen</string>
+
+    <!-- Einstellungen -->
+    <string name="settings_category_apps">App-Verwaltung</string>
+    <string name="settings_show_system_apps">System-Apps anzeigen</string>
+    <string name="settings_show_system_apps_desc">Zeigt auch Hintergrund- und Systempakete in der Liste an</string>
+    <string name="settings_recents_mode">Zuletzt genutzte Apps</string>
+    <string name="settings_recents_mode_desc">Legt fest, wo zuletzt geöffnete Apps erscheinen</string>
+    <string name="settings_recents_off">Aus</string>
+    <string name="settings_recents_hero_only">Nur Hero-Kachel</string>
+    <string name="settings_recents_row_only">Nur separate Reihe</string>
+    <string name="settings_recents_both">Hero &amp; Reihe (Standard)</string>
+    
+    <string name="settings_reorder_apps">App-Reihenfolge anpassen</string>
+    <string name="settings_reorder_apps_desc">Verschiebe Apps nach oben oder unten</string>
+
+    <string name="settings_category_general">Allgemein &amp; Reset</string>
+    <string name="settings_reset">Auf Standardeinstellungen zurücksetzen</string>
+    <string name="settings_reset_desc">Löscht Favoriten, Sortierung und benutzerdefinierte Icons</string>
+    <string name="settings_reset_confirm">Möchtest du wirklich alle Launcher-Einstellungen und Favoriten zurücksetzen?</string>
+    <string name="settings_reset_done">Einstellungen wurden zurückgesetzt.</string>
+
+    <!-- Hero-Karte & Wetter -->
+    <string name="last_app_label">Zuletzt geöffnet</string>
+    <string name="no_recent_app">Noch keine App gestartet</string>
+    <string name="weather_loading">Wetter wird geladen…</string>
+    <string name="weather_unavailable">Wetter nicht verfügbar</string>
+    <string name="weather_no_key">Wetter (Kein API-Key)</string>
+    <string name="weather_city_default">Standort</string>
+
+    <!-- Dialoge & Allgemein -->
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Abbrechen</string>
+    <string name="move_up">Nach vorne</string>
+    <string name="move_down">Nach hinten</string>
+</resources>

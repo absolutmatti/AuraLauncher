@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tv_background"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="vertical">
+
+    <!-- Hero-Header Kachel oben -->
+    <include
+        android:id="@+id/heroCard"
+        layout="@layout/view_hero_card" />
+
+    <!-- Container für Leanback RowsSupportFragment (Favoriten, Zuletzt genutzt, Alle Apps) -->
+    <FrameLayout
+        android:id="@+id/rowsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false" />
+
+</LinearLayout>

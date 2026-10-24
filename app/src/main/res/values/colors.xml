@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TV Launcher Farbpalette (Dark Theme Only) -->
+    <color name="tv_background">#121212</color>
+    <color name="tv_surface_hero">#1E1E1E</color>
+    <color name="tv_surface_card">#242424</color>
+    <color name="tv_surface_dialog">#282828</color>
+    
+    <!-- Akzentfarbe: Deep Purple -->
+    <color name="tv_accent">#9C27B0</color>
+    <color name="tv_accent_variant">#7B1FA2</color>
+    <color name="tv_accent_glow">#669C27B0</color>
+    <color name="tv_accent_light">#BA68C8</color>
+
+    <!-- Texte & Symbole -->
+    <color name="tv_text_primary">#FFFFFF</color>
+    <color name="tv_text_secondary">#B0B0B0</color>
+    <color name="tv_text_tertiary">#757575</color>
+    <color name="tv_divider">#2E2E2E</color>
+    
+    <!-- Leanback Standard Farben-Overrides -->
+    <color name="lb_default_brand_color">#9C27B0</color>
+    <color name="lb_browse_title_color">#FFFFFF</color>
+</resources>
