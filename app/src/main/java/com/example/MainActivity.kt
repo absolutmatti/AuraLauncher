@@ -14,23 +14,26 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.data.AppPreferences
 import com.example.data.AppRepository
 import com.example.data.weather.WeatherRepository
 import com.example.model.AppInfo
 import com.example.model.WeatherInfo
-import com.example.ui.MainFragment
+import com.example.ui.MainBrowseFragment
 import com.example.ui.settings.SettingsActivity
+import com.example.ui.viewmodel.LauncherViewModel
 import kotlinx.coroutines.launch
 
 /**
  * Haupt-Activity des TV Launchers für Philips Google TV.
  * Verwaltet die Hero-Kachel (Uhrzeit, Datum, Wetter, Schnellstart) und bindet
- * das Leanback MainFragment für die Zeilenanzeige ein.
+ * das Leanback MainBrowseFragment für die Zeilenanzeige ein.
  */
 class MainActivity : FragmentActivity() {
 
+    private lateinit var launcherViewModel: LauncherViewModel
     private lateinit var appRepository: AppRepository
     private lateinit var appPreferences: AppPreferences
     private lateinit var weatherRepository: WeatherRepository
@@ -54,12 +57,9 @@ class MainActivity : FragmentActivity() {
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         val target = currentTargetAppForIcon
         if (uri != null && target != null) {
-            lifecycleScope.launch {
-                val success = appRepository.saveCustomIcon(target.packageName, uri)
+            launcherViewModel.saveCustomIcon(target, uri) { success ->
                 if (success) {
                     Toast.makeText(this@MainActivity, "Icon für ${target.label} aktualisiert", Toast.LENGTH_SHORT).show()
-                    val fragment = supportFragmentManager.findFragmentById(R.id.rowsContainer) as? MainFragment
-                    fragment?.loadData()
                 } else {
                     Toast.makeText(this@MainActivity, "Fehler beim Speichern des Icons", Toast.LENGTH_SHORT).show()
                 }
@@ -71,7 +71,6 @@ class MainActivity : FragmentActivity() {
     private val requestLocationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { _ ->
-        // Nach Berechtigungsentscheidung Wetter abrufen
         loadWeather()
     }
 
@@ -79,18 +78,20 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        launcherViewModel = ViewModelProvider(this)[LauncherViewModel::class.java]
         appRepository = AppRepository(this)
         appPreferences = AppPreferences(this)
         weatherRepository = WeatherRepository(this)
 
         initHeroViews()
         setupMainFragment()
+        observeViewModel()
         checkLocationPermissionsAndLoadWeather()
     }
 
     override fun onResume() {
         super.onResume()
-        updateHeroRecentApp()
+        launcherViewModel.loadApps()
     }
 
     /**
@@ -112,7 +113,7 @@ class MainActivity : FragmentActivity() {
         heroRecentAppButton.setOnClickListener {
             val app = mostRecentApp
             if (app != null) {
-                appRepository.launchApp(app)
+                launcherViewModel.launchApp(app)
             } else {
                 Toast.makeText(this, "Keine vorherige App vorhanden", Toast.LENGTH_SHORT).show()
             }
@@ -128,16 +129,12 @@ class MainActivity : FragmentActivity() {
     }
 
     /**
-     * Bindet das Leanback MainFragment in den unteren Bildschirmbereich ein.
+     * Bindet das Leanback MainBrowseFragment in den unteren Bildschirmbereich ein.
      */
     private fun setupMainFragment() {
-        var fragment = supportFragmentManager.findFragmentById(R.id.rowsContainer) as? MainFragment
+        var fragment = supportFragmentManager.findFragmentById(R.id.rowsContainer) as? MainBrowseFragment
         if (fragment == null) {
-            fragment = MainFragment().apply {
-                onRecentAppUpdated = { app ->
-                    mostRecentApp = app
-                    updateHeroRecentApp()
-                }
+            fragment = MainBrowseFragment().apply {
                 onChangeIconRequested = { app ->
                     currentTargetAppForIcon = app
                     pickImageLauncher.launch("image/*")
@@ -150,11 +147,22 @@ class MainActivity : FragmentActivity() {
     }
 
     /**
+     * Beobachtet den Zustand des [LauncherViewModel].
+     */
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            launcherViewModel.uiState.collect { state ->
+                mostRecentApp = state.mostRecentApp
+                updateHeroRecentApp(state.mostRecentApp, state.recentsMode)
+            }
+        }
+    }
+
+    /**
      * Aktualisiert die Vorschau der zuletzt genutzten App in der Hero-Karte.
      */
-    private fun updateHeroRecentApp() {
-        val mode = appPreferences.getRecentAppsMode()
-        val showHero = mode == AppPreferences.RECENTS_MODE_HERO_ONLY || mode == AppPreferences.RECENTS_MODE_BOTH
+    private fun updateHeroRecentApp(app: AppInfo?, recentsMode: Int) {
+        val showHero = recentsMode == AppPreferences.RECENTS_MODE_HERO_ONLY || recentsMode == AppPreferences.RECENTS_MODE_BOTH
 
         if (!showHero) {
             heroLeftColumn.visibility = View.INVISIBLE
@@ -162,7 +170,6 @@ class MainActivity : FragmentActivity() {
         }
 
         heroLeftColumn.visibility = View.VISIBLE
-        val app = mostRecentApp
         if (app != null) {
             heroRecentAppName.text = app.label
             heroRecentAppSubtext.text = "Klicke zum Fortsetzen"
@@ -221,7 +228,7 @@ class MainActivity : FragmentActivity() {
      */
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        // Fokus auf die Hero-Karte oder erste Reihe setzen statt die App zu beenden
+        // Fokus auf die Hero-Karte setzen statt die App zu beenden
         heroRecentAppButton.requestFocus()
     }
 }

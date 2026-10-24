@@ -99,6 +99,14 @@ class AppRepository(private val context: Context) {
     }
 
     /**
+     * Bequeme Hilfsmethode: Ruft alle installierten Launcher-Apps ab,
+     * gefiltert nach CATEGORY_LAUNCHER / CATEGORY_LEANBACK_LAUNCHER.
+     */
+    suspend fun getInstalledApps(): List<AppInfo> {
+        return loadInstalledApps(appPreferences.isShowSystemApps())
+    }
+
+    /**
      * Erstellt ein [AppInfo]-Objekt aus den ResolveInfo-Daten des PackageManagers.
      */
     private fun createFromResolveInfo(resolve: ResolveInfo): AppInfo {
